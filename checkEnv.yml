@@ -1,0 +1,184 @@
+---
+- name: Verify system characteristics and install essential packages
+  hosts: all
+  gather_facts: true
+  vars_files:
+    - vars/common.yml
+  tasks:
+    - name: Ensure vim is installed
+      ansible.builtin.dnf:
+        name: vim
+        state: present
+
+    - name: Ensure nc is installed
+      ansible.builtin.dnf:
+        name: nc
+        state: present
+
+- name: Verify system characteristics for web servers
+  hosts: web_servers
+  gather_facts: true
+  vars_files:
+    - vars/web.yml
+  tasks:
+    - name: Check number of vCPUs
+      ansible.builtin.assert:
+        that:
+          - ansible_processor_vcpus >= required_vcpus
+        fail_msg: "The number of vCPUs is less than {{ required_vcpus }}"
+
+    - name: Check memory
+      ansible.builtin.assert:
+        that:
+          - ansible_memtotal_mb / 1024 >= required_memory_gb
+        fail_msg: "The memory is less than {{ required_memory_gb }} GB"
+
+    - name: Check mount points
+      block:
+        - name: Get mount point details
+          ansible.builtin.command: df -h --output=target,size
+          register: mount_output
+
+        - name: Parse mount points
+          ansible.builtin.set_fact:
+            mount_points: >-
+              {{
+                mount_output.stdout_lines[1:] |
+                map('regex_search', '^\\s*(?P<path>\\S+)\\s+(?P<size>\\d+)G$') |
+                select('defined') |
+                map('extract', 0) |
+                list
+              }}
+
+        - name: Verify mount points
+          ansible.builtin.assert:
+            that:
+              - mount_points | selectattr('path', 'equalto', item.path) | map(attribute='size') | first | int >= item.required_size_gb
+            with_items: "{{ required_mount_points }}"
+            fail_msg: "Mount point {{ item.path }} is missing or less than {{ item.required_size_gb }} GB"
+
+    - name: Test open ports
+      ansible.builtin.shell: "nc -zv localhost {{ item.port }}"
+      register: nc_result
+      failed_when: nc_result.rc != 0
+      with_items: "{{ required_open_ports }}"
+      ignore_errors: true
+
+    - name: Verify open ports
+      ansible.builtin.assert:
+        that:
+          - nc_result.failed == false
+        with_items: "{{ required_open_ports }}"
+        fail_msg: "Port {{ item.port }} is not open"
+
+- name: Verify system characteristics for app servers
+  hosts: app_servers
+  gather_facts: true
+  vars_files:
+    - vars/app.yml
+  tasks:
+    - name: Check number of vCPUs
+      ansible.builtin.assert:
+        that:
+          - ansible_processor_vcpus >= required_vcpus
+        fail_msg: "The number of vCPUs is less than {{ required_vcpus }}"
+
+    - name: Check memory
+      ansible.builtin.assert:
+        that:
+          - ansible_memtotal_mb / 1024 >= required_memory_gb
+        fail_msg: "The memory is less than {{ required_memory_gb }} GB"
+
+    - name: Check mount points
+      block:
+        - name: Get mount point details
+          ansible.builtin.command: df -h --output=target,size
+          register: mount_output
+
+        - name: Parse mount points
+          ansible.builtin.set_fact:
+            mount_points: >-
+              {{
+                mount_output.stdout_lines[1:] |
+                map('regex_search', '^\\s*(?P<path>\\S+)\\s+(?P<size>\\d+)G$') |
+                select('defined') |
+                map('extract', 0) |
+                list
+              }}
+
+        - name: Verify mount points
+          ansible.builtin.assert:
+            that:
+              - mount_points | selectattr('path', 'equalto', item.path) | map(attribute='size') | first | int >= item.required_size_gb
+            with_items: "{{ required_mount_points }}"
+            fail_msg: "Mount point {{ item.path }} is missing or less than {{ item.required_size_gb }} GB"
+
+    - name: Test open ports
+      ansible.builtin.shell: "nc -zv localhost {{ item.port }}"
+      register: nc_result
+      failed_when: nc_result.rc != 0
+      with_items: "{{ required_open_ports }}"
+      ignore_errors: true
+
+    - name: Verify open ports
+      ansible.builtin.assert:
+        that:
+          - nc_result.failed == false
+        with_items: "{{ required_open_ports }}"
+        fail_msg: "Port {{ item.port }} is not open"
+
+- name: Verify system characteristics for db servers
+  hosts: db_servers
+  gather_facts: true
+  vars_files:
+    - vars/db.yml
+  tasks:
+    - name: Check number of vCPUs
+      ansible.builtin.assert:
+        that:
+          - ansible_processor_vcpus >= required_vcpus
+        fail_msg: "The number of vCPUs is less than {{ required_vcpus }}"
+
+    - name: Check memory
+      ansible.builtin.assert:
+        that:
+          - ansible_memtotal_mb / 1024 >= required_memory_gb
+        fail_msg: "The memory is less than {{ required_memory_gb }} GB"
+
+    - name: Check mount points
+      block:
+        - name: Get mount point details
+          ansible.builtin.command: df -h --output=target,size
+          register: mount_output
+
+        - name: Parse mount points
+          ansible.builtin.set_fact:
+            mount_points: >-
+              {{
+                mount_output.stdout_lines[1:] |
+                map('regex_search', '^\\s*(?P<path>\\S+)\\s+(?P<size>\\d+)G$') |
+                select('defined') |
+                map('extract', 0) |
+                list
+              }}
+
+        - name: Verify mount points
+          ansible.builtin.assert:
+            that:
+              - mount_points | selectattr('path', 'equalto', item.path) | map(attribute='size') | first | int >= item.required_size_gb
+            with_items: "{{ required_mount_points }}"
+            fail_msg: "Mount point {{ item.path }} is missing or less than {{ item.required_size_gb }} GB"
+
+    - name: Test open ports
+      ansible.builtin.shell: "nc -zv localhost {{ item.port }}"
+      register: nc_result
+      failed_when: nc_result.rc != 0
+      with_items: "{{ required_open_ports }}"
+      ignore_errors: true
+
+    - name: Verify open ports
+      ansible.builtin.assert:
+        that:
+          - nc_result.failed == false
+        with_items: "{{ required_open_ports }}"
+        fail_msg: "Port {{ item.port }} is not open"

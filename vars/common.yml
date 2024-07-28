@@ -1,0 +1,2 @@
+required_open_ports:
+  - port: 22

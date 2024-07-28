@@ -1,0 +1,11 @@
+required_vcpus: 8
+required_memory_gb: 32
+required_mount_points:
+  - path: /pg_data
+    required_size_gb: 200
+  - path: /pg_backup
+    required_size_gb: 200
+  - path: /pg_xlogs
+    required_size_gb: 200
+required_open_ports:
+  - port: 5432

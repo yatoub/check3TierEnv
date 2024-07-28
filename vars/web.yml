@@ -1,0 +1,9 @@
+required_vcpus: 2
+required_memory_gb: 8
+required_mount_points:
+  - path: /var/log
+    required_size_gb: 20
+required_open_ports:
+  - port: 80
+  - port: 443
+  - port: 22

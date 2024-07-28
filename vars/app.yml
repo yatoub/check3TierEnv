@@ -1,0 +1,7 @@
+required_vcpus: 4
+required_memory_gb: 16
+required_mount_points:
+  - path: /appli
+    required_size_gb: 100
+required_open_ports:
+  - port: 8080
