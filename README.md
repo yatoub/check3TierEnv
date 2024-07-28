@@ -19,7 +19,7 @@ Le playbook Ansible effectue également l'installation du paquet `vim` sur toute
 - `vars/web.yml` : variables spécifiques aux serveurs web.
 - `vars/app.yml` : variables spécifiques aux serveurs applicatifs.
 - `vars/db.yml` : variables spécifiques aux serveurs de bases de données.
-- `check_system.yml` : playbook Ansible principal qui effectue les vérifications et les installations.
+- `checkEnv.yml` : playbook Ansible principal qui effectue les vérifications et les installations.
 
 ## Utilisation
 
@@ -43,7 +43,7 @@ Modifier le fichier `inventory.yml` pour y ajouter vos machines cibles et ajuste
 4. **Exécuter le playbook** :  
    Lancer la commande suivante pour exécuter le playbook et vérifier les caractéristiques des machines :
    ```bash
-   ansible-playbook -i inventory.yml check_system.yml
+   ansible-playbook -i inventory.yml checkEnv.yml
    ```
 ### Exemple de configuration d'inventaire
 
