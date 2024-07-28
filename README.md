@@ -1,8 +1,9 @@
-# Vérification des Caractéristiques Systèmes d'un environnement 3 tier linux
+# Vérification des caractéristiques systèmes d'un environnement 3 tier linux
 
 ## Description
 
-Ce projet Ansible permet de vérifier les caractéristiques de plusieurs machines Linux de type RedHat par rapport à un cahier des charges. Les vérifications incluent :
+Ce projet Ansible permet de vérifier les caractéristiques de plusieurs machines Linux de type RedHat par rapport à un cahier des charges.  
+Les vérifications incluent :
 
 - Le nombre de vCPUs
 - La capacité mémoire
@@ -44,7 +45,7 @@ Modifier le fichier `inventory.yml` pour y ajouter vos machines cibles et ajuste
    ```bash
    ansible-playbook -i inventory.yml check_system.yml
    ```
-### Exemple de Configuration d'Inventaire
+### Exemple de configuration d'inventaire
 
 ```yaml
 all:
@@ -66,11 +67,11 @@ all:
         server3:
           ansible_host: 192.168.1.3
 ```
-### Exemple de Variables pour un Serveur Web
+### Exemple de variables pour un serveur web
 
 ```yaml
-required_vcpus: 4
-required_memory_gb: 16
+required_vcpus: 2
+required_memory_gb: 4
 required_mount_points:
   - path: /var/www
     required_size_gb: 50
@@ -84,7 +85,7 @@ required_open_ports:
 À la fin de l'exécution du playbook, Ansible générera un rapport indiquant si les machines vérifiées répondent aux critères spécifiés dans les fichiers de variables. Toute non-conformité sera clairement signalée.
 
 ### Licence  
-Ce projet est sous licence [GNU General Public License v3.0.](README.md) Vous êtes libre de l'utiliser, de le modifier et de le distribuer selon les termes de cette licence.
+Ce projet est sous licence [GNU General Public License v3.0.](LICENCE) Vous êtes libre de l'utiliser, de le modifier et de le distribuer selon les termes de cette licence.
 
 Pour toute question ou suggestion, n'hésitez pas à ouvrir une issue ou à contacter le mainteneur du projet.  
 
