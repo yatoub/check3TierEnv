@@ -1,4 +1,4 @@
-# Projet de Vérification des Caractéristiques Systèmes
+# Vérification des Caractéristiques Systèmes d'un environnement 3 tier linux
 
 ## Description
 
@@ -85,3 +85,7 @@ required_open_ports:
 
 ### Licence  
 Ce projet est sous licence [GNU General Public License v3.0.](README.md) Vous êtes libre de l'utiliser, de le modifier et de le distribuer selon les termes de cette licence.
+
+Pour toute question ou suggestion, n'hésitez pas à ouvrir une issue ou à contacter le mainteneur du projet.  
+
+Merci d'utiliser ce projet !  
